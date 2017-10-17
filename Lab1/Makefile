@@ -13,4 +13,6 @@ myMain.o: myMain.c binarySearchTree.h
 clean:
 	rm -f *.o myMain
 
+main: myMain
+	./myMain
 
