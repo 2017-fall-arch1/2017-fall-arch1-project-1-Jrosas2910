@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "binarySearchTree.h" //Still need to implement binarySearchTree.h
+#include "binarySearchTree.h" 
 
 
 //Allocate memory for new Binary Search Tree and create a new binary Search Tree
@@ -28,23 +28,43 @@ the first node on root. If root is not null it means we have
 to compare strings and figure out where to place the new 
 Node.
  */
-node *cursorPrev =NULL; 
-node *cursor =NULL;
 
+
+node *cursorPrev=NULL;
+node *cursor=NULL;
 void insertNode(bst * bstree, char *name){
-  node *newNode = allocCreateNewNode(name);
-   
+  
+  node *newNode;
+  int len;
+  char *nameCopy;
+  //algorithm by Dr. Eric Freudenthal demo
+    for(len=0;name[len];len++);//compute length
+  nameCopy = (char *)malloc(len+1);
+  for(len = 0; name[len];len++)
+    nameCopy[len] = name[len];
+    nameCopy[len]=0;
+  
+          newNode = allocCreateNewNode(name);
+	  newNode->str=nameCopy;
+	  newNode->rightNode=NULL;
+	  newNode->leftNode=NULL;
+	  newNode->parentNode=NULL;
+	  //printf("Printing%s",newNode->str);
+  
   //if root is null place node in root
   if(bstree->theroot==NULL){
+    //     printf("root is null");
     bstree->theroot = newNode;
-    cursor = bstree->theroot;
+    cursor=bstree->theroot;
     cursorPrev = bstree->theroot;
     bstree->theroot->parentNode=NULL;
-     
   }
   //if root is not null compare strings
     else{
       int cmpNum= strcmp(cursor->str,name);
+      // printf("gone here %d",cmpNum);
+      // printf(" names %s ",cursor->str);
+      // printf(" InputFileName %s",name);
       /*
 	This means that the new node is less than the cursor
 	This method will happen only when cursor is in the same position as
@@ -61,7 +81,7 @@ void insertNode(bst * bstree, char *name){
         //Just in case. Now that the new Node is placed update cursor to root for next word
 	  cursor= bstree->theroot;
 	  cursorPrev = bstree->theroot;
-	  
+	  //   printf("gone here 1");
 	}
 	/*if left node of cursor is not null then compare. 
 	  Now cursor is the left node of current cursor*/
@@ -81,6 +101,7 @@ void insertNode(bst * bstree, char *name){
 	    cursor= cursor->leftNode;
 	    insertNode(bstree,name);
 	    }
+	  // printf("gone here 2");
 	}
       }
       /*
@@ -95,7 +116,7 @@ void insertNode(bst * bstree, char *name){
        
 	  cursor = bstree->theroot;
 	  cursorPrev= bstree->theroot;
-	  
+	  //printf("gone here 3");  
 	}
 	/*if right node of cursor is not null then compare. 
 	 Now cursor is the right node of current cursor*/
@@ -110,6 +131,7 @@ void insertNode(bst * bstree, char *name){
 	    cursor = cursor->rightNode;
 	  insertNode(bstree,name);
 	}
+	  // printf("gone here 4");
 	}
       }
     }
@@ -119,36 +141,41 @@ For Printing a whole binary tree in postOrder
 Print tree in postOrder logic from  
  "www.geeksforgeeks.org/tree-traversal-inorder-preorder-and-postorder/"
  */
-  void printTree(node *node){
-   
-    if(node == NULL)
+//print only the tree to the console not the file
+void printTreeConsole(node *node){
+if(node == NULL)
       return;
-     printf("%s\n",node->str);
-    addTextToFile("employeesNames.txt",node->str);
+     printf("%s",node->str);
    
-    printTree(node->leftNode);
-    printTree(node->rightNode);
-    
-  }
-
-void printTreeToTxt(char *filename,node *node){
-
-  FILE *file;
+    printTreeConsole(node->leftNode);
+    printTreeConsole(node->rightNode);
+}
+//print the sorted tree to file
+void printTreeToFile(node *node){
   if(node==NULL)
-    fclose(file);
     return;
-  
-  
-   file= fopen(filename,"a");
-  fprintf(file, "%s\n",node->str);
+  printf("%s",node->str);
+  addTextToFile("employeesNames.txt",node->str);  
+    printTreeToFile(node->leftNode);
+    printTreeToFile(node->rightNode);
+    /*   file= fopen(filename,"a");
+  fprintf(file, "%s",node->str);
   printTreeToTxt(filename,node->leftNode);
-  printTreeToTxt(filename,node->rightNode);
+  printTreeToTxt(filename,node->rightNode);*/
   
 }
+//overwrite text from file
+void addTextToFileOverwrite(char *filename, char *text){
+FILE *file;
+  file = fopen(filename,"w");
+  fputs(text,file);
+  fclose(file);
+}
+//Add single char to file
 void addTextToFile(char *filename,char *text){
   FILE *file;
   file = fopen(filename,"a");
-  fputs(strcat(text,"\n"),file);
+  fputs(text,file);
   fclose(file);
   
   
@@ -158,17 +185,15 @@ delete name from tree
 there is only two ways to delete a node
 if currentNode has one left child, current node has two childs, or current node has one right child.
  */
-void deleteName(node *node,char *name){
+void deleteName(node *thenode,char *name){
   
-  if(node == NULL)
+  if(thenode == NULL)
       return;
-    printf("%s\n",node->str);
-    if(node->str==name)
-      cursor=node;
-    printTree(node->leftNode);
-    printTree(node->rightNode);
-
-    
+    printf("%s\n",thenode->str);
+    if(thenode->str==name)
+      cursor=thenode;
+    printTreeConsole(thenode->leftNode);
+    printTreeConsole(thenode->rightNode);
     if(cursor!=NULL){
       //if node found has a left child
       if(cursor->rightNode==NULL&&cursor->leftNode!=NULL){
