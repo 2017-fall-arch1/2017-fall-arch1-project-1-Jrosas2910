@@ -180,29 +180,53 @@ void addTextToFile(char *filename,char *text){
   
   
 }
+ 
 /*
 delete name from tree
 there is only two ways to delete a node
 if currentNode has one left child, current node has two childs, or current node has one right child.
  */
-void deleteName(node *thenode,char *name){
+void deleteName(bst *bstree,char *name){
+  //scan the file for deletion
   
-  if(thenode == NULL)
-      return;
-    printf("%s\n",thenode->str);
-    if(thenode->str==name)
-      cursor=thenode;
-    printTreeConsole(thenode->leftNode);
-    printTreeConsole(thenode->rightNode);
-    if(cursor!=NULL){
-      //if node found has a left child
-      if(cursor->rightNode==NULL&&cursor->leftNode!=NULL){
-	cursor->parentNode->rightNode=cursor->rightNode;
-      }
-	//if node found has a right child
 
-	//if node found has a right and left child
+  bst *tempBST =  allocCreateNewBST();
+ FILE *filePointer;
+char buf[40];
+  filePointer = fopen("employeesNames.txt","r");
+  if(!filePointer){
+    printf("(Error File employeesNames.txt does not exist)\n");//if file does not exist print this for the user
+  }
+  else{
+    printf("(File employeesNames.txt was opened sucessfully)\n");
+    while(fgets(buf,40,filePointer)!=NULL){
+if(strcmp(buf,"\n")==0){
+
+ }
+ else{
+   
+    int leni;
+  char *nameCopy2;
+  //algorithm by Dr. Eric Freudenthal demo
+    for(leni=0;buf[leni];leni++);//compute length
+  nameCopy2 = (char *)malloc(leni+1);
+  for(leni = 0; buf[leni];leni++)
+    nameCopy2[leni] = buf[leni];
+    nameCopy2[leni]=0;
+    if(strcmp(name,nameCopy2)==0){
+      printf("EMPLOYEE FOUND");
     }
+   else{
+      insertNode(tempBST,buf);
+   }
+//printf("root is %s\n",newBst->theroot->str);
+// printf("While %s\n",newBst->theroot->str);
+}
+    }   
+}
+ bstree=tempBST;
+ fclose(filePointer);
+ 
 }
 
 

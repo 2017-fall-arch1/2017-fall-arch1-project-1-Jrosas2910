@@ -18,19 +18,14 @@ char buf[40];
     printf("(File employeesNames.txt was opened sucessfully)\n");
     while(fgets(buf,40,filePointer)!=NULL){
 if(strcmp(buf,"\n")==0){
-
 }else{
-
       insertNode(newBst,buf);
 //printf("root is %s\n",newBst->theroot->str);
 // printf("While %s\n",newBst->theroot->str);
 }
     }
-   
-    
 }
-fclose(filePointer);
-	
+  fclose(filePointer);	
 }
 
 int main()
@@ -66,46 +61,40 @@ scanFile(newBst,"employeesNames.txt");
     char answer[1];
     char *nameToDel=(char*)malloc(20);
     
-  printf("\nAdd new Employee Name: ");
+  printf("===============================================\nType [QUIT] to quit\nType [LIST] to show list\nType [DEL] to delete name from list\nAdd new Employee Name:\n");
   scanf("%s",name);
   int compareQUIT1 = strcmp(name,"QUIT");
   if(compareQUIT1==0){
     s=50;
     break;
   }
-  printf("Do you want to add a new Employee. \nType [Y] for yes [N] for No \n[DEL] to delete\n[LIST] to show list\n");
-  scanf("%s",answer);
-insertNode(newBst,strcat(name,"\n"));
-  int compareStr = strcmp(answer, "Y");
-  int compareDEL = strcmp(answer, "DEL");
-  int compareLIST = strcmp(answer, "LIST");
-  int compareQUIT2 = strcmp(answer,"QUIT");
+
+  int compareDEL = strcmp(name, "DEL");
+  int compareLIST = strcmp(name, "LIST");
+  int compareQUIT2 = strcmp(name,"QUIT");
   //if Answer is Y it will return a zero dont do anything continue loop
-  if(compareStr==0){
-   
-  }
-  else if (compareDEL==0){
-    printf("Enter the name you want to delete:\n");
+  if (compareDEL==0){
+    printf("\nEnter the name you want to delete:\n");
     scanf("%s",nameToDel);
 
-    deleteName(newBst->theroot,nameToDel);
+     deleteName(newBst,nameToDel);
 
     printTreeConsole(newBst->theroot);
   }
   else if(compareQUIT2 ==0){
-    s=49;
+    s=50;
   }
   else if (compareLIST==0){
 printTreeConsole(newBst->theroot);
   }
   else{
-    s=49;
+   insertNode(newBst,strcat(name,"\n"));
   }
   }
   printf("=====================================\n");
   printf("Employees Name List:\n\n");
 addTextToFileOverwrite("employeesNames.txt","");
 printTreeToFile(newBst->theroot);
-  printf("\n====================================");
+  printf("\n==============END OF PROGRAM==================\n");
   return 0;
 }

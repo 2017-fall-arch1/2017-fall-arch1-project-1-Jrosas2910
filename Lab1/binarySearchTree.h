@@ -18,7 +18,7 @@ typedef struct bst{
 node *allocCreateNewNode(char *str);
 void insertNode(bst* theBst, char *str);
 void printTreeConsole(node *node);
-void deleteName(node *node,char *name);
+void deleteName(bst *bstree,char *name);
 void iterate(node *node);
 void printTreeToFile(node *node);
 void addTextToFile(char *file,char *text);
