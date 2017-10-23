@@ -180,54 +180,107 @@ void addTextToFile(char *filename,char *text){
   
   
 }
+/*delete char
+some chars have a new line. And when comparing two
+strings that are the same it returns they are not equal
+because of the new line. This method will remove the new line */
+void deleteNewLinefromChar(char *name){
+  
  
+  // printf("Print is %s",name[0]);
+  int booleanFlag=0;
+  for(int i = 0;i<strlen(name);i++){
+    if(name[i]=='\n'){
+      printf("FOUNDSS");
+      booleanFlag=1;
+    }
+  }
+  if(booleanFlag==0){
+    char *copy= (char*)malloc(strlen(name)-1);
+    for(int i = 0;i<(strlen(name)-1);i++){
+      copy[i]=name[i];
+      
+  }
+    name = copy;
+    
+  }
+  
+    
+}
 /*
 delete name from tree
-there is only two ways to delete a node
+there is only three ways to delete a node
 if currentNode has one left child, current node has two childs, or current node has one right child.
  */
-void deleteName(bst *bstree,char *name){
+void deleteName(bst *bst,char *name){
   //scan the file for deletion
-  
+  node *pointer=bst->theroot;
+  node *secPointer = bst->theroot;
 
-  bst *tempBST =  allocCreateNewBST();
- FILE *filePointer;
-char buf[40];
-  filePointer = fopen("employeesNames.txt","r");
-  if(!filePointer){
-    printf("(Error File employeesNames.txt does not exist)\n");//if file does not exist print this for the user
-  }
-  else{
-    printf("(File employeesNames.txt was opened sucessfully)\n");
-    while(fgets(buf,40,filePointer)!=NULL){
-if(strcmp(buf,"\n")==0){
-
- }
- else{
-   
-    int leni;
-  char *nameCopy2;
-  //algorithm by Dr. Eric Freudenthal demo
-    for(leni=0;buf[leni];leni++);//compute length
-  nameCopy2 = (char *)malloc(leni+1);
-  for(leni = 0; buf[leni];leni++)
-    nameCopy2[leni] = buf[leni];
-    nameCopy2[leni]=0;
-    if(strcmp(name,nameCopy2)==0){
-      printf("EMPLOYEE FOUND");
-    }
-   else{
-      insertNode(tempBST,buf);
+   deleteNewLinefromChar(pointer->str);
+   //Delete last garbage line from pointer->str and copy everything
+   char *copy=(char *)malloc(strlen(pointer->str)-1);
+ for(int i = 0;i<(strlen(pointer->str));i++){
+   if(i==(strlen(pointer->str))){
+   }else{
+      copy[i]=pointer->str[i-1];
    }
-//printf("root is %s\n",newBst->theroot->str);
-// printf("While %s\n",newBst->theroot->str);
+  }
+ //assign the new copy to pointer->str
+ pointer->str=copy;
+  int pointerLength= strlen(pointer->str);
+  int nameLength = strlen(name);
+  int cmpStrings = strcmp(pointer->str,name);
+  //first check if root is the name we are looking for
+  // printf("CompareNumber %d\n",cmpStrings);
+  if(cmpStrings==0||pointer->str==name){
+    //check if root contains a right node
+    if(pointer->rightNode!=NULL){
+      secPointer = pointer->rightNode;//change second pointer to right of root
+      pointer = pointer->leftNode;
+      free(pointer->parentNode);//free allocated memory of node to be deleted
+      
+      //We want to reach a leaf to move the right side of the root node
+      while(pointer->rightNode!=NULL){
+	pointer = pointer->rightNode;//MovePointerRight until reach an end
+       
+      }
+      //we have reached a leaf
+      if(pointer->rightNode==NULL){
+	pointer->rightNode= secPointer;
+	pointer=bst->theroot;
+      }
+    }
+    else{
+      //if root right node == Null then just delete root and make the left Node a root of the tree
+      //printf("passing thru else");
+      pointer=pointer->leftNode;//Check this one
+      free(pointer->parentNode);//free allocated memory of node to be deleted
+      pointer=bst->theroot;//move pointers back to the root
+      secPointer=bst->theroot;
+    }
+  }
+  //This means that employee was not found on the root. We have to search the whole tree
+  else{
+    //node *enode=FindNode(pointer,name);
+    /*
+    if(enode==NULL){
+      printf("\nEmployee was not found\n");
+    }
+    //Employee was found begin removal process
+    else{
+      pointer=enode;
+      secPointer=enode;
+
+
+      printf("EMPLOYEE WAS FOUND");
+      
+    
+  
+      }*/
+  }
 }
-    }   
-}
- bstree=tempBST;
- fclose(filePointer);
- 
-}
+
 
 
 

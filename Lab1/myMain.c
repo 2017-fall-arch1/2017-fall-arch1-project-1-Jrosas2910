@@ -78,7 +78,6 @@ scanFile(newBst,"employeesNames.txt");
     scanf("%s",nameToDel);
 
      deleteName(newBst,nameToDel);
-
     printTreeConsole(newBst->theroot);
   }
   else if(compareQUIT2 ==0){
